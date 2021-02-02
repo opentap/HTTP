@@ -1,0 +1,29 @@
+image: registry.gitlab.com/denrask/opentap-apitest:tap
+
+variables:
+  PACKAGE_REPO_URL: "http://packages.opentap.io"
+  GIT_DEPTH: ""
+
+
+stages:
+  - build
+  - publish
+
+
+Test:
+    stage: build
+    tags:
+        - gitlab-org
+    script:
+      - dotnet test WebApiTester.Tests -c Release
+
+Build:
+    stage: build
+    tags:
+        - gitlab-org
+    script:
+      - dotnet build WebApiTester -c Release 
+      - mv WebApiTester/bin/Release/*.TapPackage .
+    artifacts:
+      paths:
+        - "*.TapPackage"

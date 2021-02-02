@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <CreateOpenTapPackage>false</CreateOpenTapPackage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <OutputPath>bin/Release</OutputPath>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Jint" Version="3.0.0-beta-1598" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="OpenTAP" Version="9.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="package.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="packages.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="DebugDependencies" AfterTargets="Build" Condition="$(Configuration) == 'Debug' AND  '$(OS)' == 'Windows_NT'">
+    <Exec Command="tap package install &quot;Editor CE&quot; -r packages.opentap.io --dependencies" WorkingDirectory="$(OutDir)" EnvironmentVariables="OPENTAP_DEBUGGER_ASSEMBLY=" Condition="!Exists('$(OutDir)Packages/Editor CE/package.xml')" />
+  </Target>
+
+  <Target Name="ReleaseDependencies" AfterTargets="Build" Condition="$(Configuration) == 'Release'">
+    <Exec Command="tap package create package.xml" WorkingDirectory="$(OutDir)" EnvironmentVariables="OPENTAP_DEBUGGER_ASSEMBLY=" />
+  </Target>
+
+
+
+</Project>

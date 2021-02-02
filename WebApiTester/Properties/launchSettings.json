@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "ApiTester": {
+      "commandName": "Executable",
+      "executablePath": "$(TargetDir)editor.exe",
+      "commandLineArgs": "",
+      "environmentVariables": {
+        "OPENTAP_DEBUGGER_ASSEMBLY": "$(TargetDir)/Packages/SDK Tools/Keysight.OpenTap.Sdk.Debugger.dll"
+      }
+    },
+    "Convert": {
+      "commandName": "Executable",
+      "executablePath": "$(TargetDir)tap.exe",
+      "commandLineArgs": "webapi convert C:/Git/REST-API/RestApi/Examples/Postman/PostmanTestCollection.json",
+      "environmentVariables": {
+        "OPENTAP_DEBUGGER_ASSEMBLY": "$(TargetDir)/Packages/SDK Tools/Keysight.OpenTap.Sdk.Debugger.dll"
+      }
+    }
+  }
+}
