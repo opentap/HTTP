@@ -5,6 +5,48 @@
       <Enabled>true</Enabled>
       <Name>Parallel</Name>
       <ChildTestSteps>
+        <TestStep type="WebApiTester.RestApiEnvironment" Version="0.0.0" Id="ce60f850-4346-4f54-9b99-0d2dd0f6b07a">
+          <BaseAddress>http://packages.opentap.io/3.0</BaseAddress>
+          <PublicEnvironmentVariables />
+          <PublicGlobalVariables />
+          <Enabled>true</Enabled>
+          <Name>{Host} Environment (2)</Name>
+          <ChildTestSteps>
+            <TestStep type="WebApiTester.RequestStep" Version="0.0.0" Id="4822a50a-4310-4157-889e-2cbaeb642932">
+              <Endpoint>GetPackageVersions/WebApiTester</Endpoint>
+              <Method>GET</Method>
+              <Headers>
+                <Header>
+                  <Key>Accept</Key>
+                  <Value>application/json</Value>
+                </Header>
+              </Headers>
+              <BodyType>None</BodyType>
+              <Body></Body>
+              <UseTimeout>
+                <Value>00:01:00</Value>
+                <IsEnabled>false</IsEnabled>
+              </UseTimeout>
+              <BodyFormData />
+              <BodyBinary />
+              <BodyFormUrlEncoded />
+              <AvailableSnippets></AvailableSnippets>
+              <ResponseAction>RunTests, Print</ResponseAction>
+              <ResponseTests>
+                <Base64>DQp2YXIganNvbiA9IEpTT04ucGFyc2UodGFwLlJlc3BvbnNlLkJvZHkpOw0KYXNzZXJ0LnRydWUoanNvbi5sZW5ndGggPiA1KTs=</Base64>
+              </ResponseTests>
+              <SaveToFile></SaveToFile>
+              <HttpRequestFailBehavior>Error</HttpRequestFailBehavior>
+              <Enabled>true</Enabled>
+              <Name>{Http Method} {Endpoint}</Name>
+              <ChildTestSteps />
+              <BreakConditions>Inherit</BreakConditions>
+              <OpenTap.Description />
+            </TestStep>
+          </ChildTestSteps>
+          <BreakConditions>Inherit</BreakConditions>
+          <OpenTap.Description />
+        </TestStep>
         <TestStep type="WebApiTester.RestApiEnvironment" Version="0.0.0" Id="90f08bd7-b876-4b0e-a030-58c177e9c3db">
           <BaseAddress>https://fakerapi.it/api/v1</BaseAddress>
           <PublicEnvironmentVariables />
@@ -26,7 +68,7 @@
               <BodyBinary />
               <BodyFormUrlEncoded />
               <AvailableSnippets></AvailableSnippets>
-              <ResponseAction>RunTests, Print</ResponseAction>
+              <ResponseAction>RunTests</ResponseAction>
               <ResponseTests>
                 <Base64>dmFyIGpzb24gPSBKU09OLnBhcnNlKHRhcC5SZXNwb25zZS5Cb2R5KTsNCmFzc2VydC5lcXVhbHModGFwLnJlc3BvbnNlLnN0YXR1c0NvZGUsIDIwMCk7DQphc3NlcnQuRXF1YWxzKGpzb24uZGF0YVswXS5maXJzdG5hbWUsICdOZWxzb24nKTsNCmFzc2VydC5FcXVhbHMoanNvbi5kYXRhWzBdLmdlbmRlciwgJ21hbGUnKTsNCmFzc2VydC5FcXVhbHMoanNvbi5kYXRhWzBdLmZpcnN0bmFtZSwgJ05lbHNvbicpOw0K</Base64>
               </ResponseTests>
@@ -63,7 +105,7 @@
               <BodyBinary />
               <BodyFormUrlEncoded />
               <AvailableSnippets></AvailableSnippets>
-              <ResponseAction>RunTests, Print</ResponseAction>
+              <ResponseAction>RunTests</ResponseAction>
               <ResponseTests>
                 <Base64>dmFyIGpzb24gPSBKU09OLnBhcnNlKHRhcC5SZXNwb25zZS5Cb2R5KTsNCmFzc2VydC5lcXVhbHModGFwLnJlc3BvbnNlLnN0YXR1c0NvZGUsIDIwMCk7DQphc3NlcnQuRXF1YWxzKGpzb24ubmFtZSwgJ21hZ2lrYXJwJyk7DQphc3NlcnQuRXF1YWxzKGpzb24ubW92ZXNbMV0ubW92ZS5uYW1lLCAnc3BsYXNoJyk7</Base64>
               </ResponseTests>

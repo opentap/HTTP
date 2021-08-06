@@ -1,6 +1,7 @@
 ﻿using OpenTap;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace WebApiTester
 {
@@ -33,6 +34,15 @@ namespace WebApiTester
                 if (!allowFail)
                     Passed = false;
             }
+        }
+
+        public void @true(bool boolean, bool allowFail = false)
+        {
+            if (!boolean)
+                Errors.Add($"Expected to be true");
+
+            if (!boolean && !allowFail)
+                Passed = false;
         }
     }
 }

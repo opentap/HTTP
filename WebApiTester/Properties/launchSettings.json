@@ -2,19 +2,17 @@
   "profiles": {
     "ApiTester": {
       "commandName": "Executable",
+      "executablePath": "$(TargetDir)editor.exe"
+    },
+    "IntegrationTests": {
+      "commandName": "Executable",
       "executablePath": "$(TargetDir)editor.exe",
-      "commandLineArgs": "",
-      "environmentVariables": {
-        "OPENTAP_DEBUGGER_ASSEMBLY": "$(TargetDir)/Packages/SDK Tools/Keysight.OpenTap.Sdk.Debugger.dll"
-      }
+      "commandLineArgs": "--open ../../IntegrationTest/Test.TapPlan"
     },
     "Convert": {
       "commandName": "Executable",
       "executablePath": "$(TargetDir)tap.exe",
-      "commandLineArgs": "webapi convert C:/Git/REST-API/RestApi/Examples/Postman/PostmanTestCollection.json",
-      "environmentVariables": {
-        "OPENTAP_DEBUGGER_ASSEMBLY": "$(TargetDir)/Packages/SDK Tools/Keysight.OpenTap.Sdk.Debugger.dll"
-      }
+      "commandLineArgs": "webapi convert C:/Git/REST-API/RestApi/Examples/Postman/PostmanTestCollection.json"
     }
   }
 }
