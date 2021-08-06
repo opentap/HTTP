@@ -34,7 +34,7 @@ namespace Tests
         {
             string script = "pm.environment.set('guid', responseBody);";
 
-            string converted = new ApiTestCliAction().ConvertScript(script.Split(Environment.NewLine).ToList());
+            string converted = new ApiTestCliAction().ConvertScript(script.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList());
 
             Assert.AreEqual("tap.setEnvironmentVariable('guid', tap.response.body);", converted);
         }
@@ -47,7 +47,7 @@ namespace Tests
                 pm.response.to.have.status(200);
                 });";
 
-            string converted = new ApiTestCliAction().ConvertScript(script.Split(Environment.NewLine).ToList());
+            string converted = new ApiTestCliAction().ConvertScript(script.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList());
 
             Assert.True(converted.Contains("assert.equals(tap.response.statusCode, 200);"));
         }
@@ -56,7 +56,7 @@ namespace Tests
         public void ConvertResponseJsonTest()
         {
             string script = "var jsonData = pm.response.json();";
-            string converted = new ApiTestCliAction().ConvertScript(script.Split(Environment.NewLine).ToList());
+            string converted = new ApiTestCliAction().ConvertScript(script.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList());
 
             Assert.AreEqual("var jsonData = JSON.parse(tap.response.body);", converted);
         }

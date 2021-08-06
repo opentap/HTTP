@@ -15,7 +15,7 @@ Test:
     tags:
         - gitlab-org
     script:
-      - dotnet test WebApiTester.Tests -c Release
+      - dotnet test WebApiTester.Tests
 
 Build:
     stage: build
@@ -27,3 +27,5 @@ Build:
     artifacts:
       paths:
         - "*.TapPackage"
+
+
