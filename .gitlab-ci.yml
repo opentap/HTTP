@@ -19,8 +19,8 @@ Test:
 
 Build:
     stage: build
-    tags:
-        - gitlab-org
+    image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
+    tags: [ docker, windows ]
     script:
       - dotnet build WebApiTester -c Release 
       - mv WebApiTester/bin/Release/*.TapPackage .
