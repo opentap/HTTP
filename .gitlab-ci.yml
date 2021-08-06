@@ -34,6 +34,10 @@ Package:
     tags:
         - gitlab-org
     image: opentapio/opentap:9.15-slim-ubuntu18.04
+    dependencies:
+      - Build
+    needs:
+      - Build
     script:
       - cd bin/Release
       - tap package create package.xml
