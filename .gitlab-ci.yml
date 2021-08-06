@@ -58,9 +58,9 @@ IntegrationTest:
     needs:
       - Package
     script:
-      - cp bin/Release/WebApiTester*.TapPackage opt/tap/WebApiTester.TapPackage
-      - cp IntegrationTest/Test.TapPlan opt/tap/Test.TapPlan
-      - cd opt/tap
+      - cp bin/Release/WebApiTester*.TapPackage /opt/tap/WebApiTester.TapPackage
+      - cp IntegrationTest/Test.TapPlan /opt/tap/Test.TapPlan
+      - cd /opt/tap
       - tap run Test.TapPlan
 
 Publish:
@@ -74,6 +74,7 @@ Publish:
     needs:
       - Build
       - Package
+      - IntegrationTest
     only:
       - tags
       - /^release.*$/
