@@ -17,17 +17,14 @@ Test:
     script:
       - dotnet test WebApiTester.Tests
 
-Build:
-    stage: build
-    tags:
-        - gitlab-org
-    script:
-      - apt-get update
-      - apt-get install locales
-      - locale-gen en_US.UTF-8
+
+Build-x64:
+  stage: build
+  image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
+  script: 
       - dotnet build WebApiTester -c Release 
       - mv WebApiTester/bin/Release/*.TapPackage .
-    artifacts:
+  artifacts:
       paths:
         - "*.TapPackage"
 
