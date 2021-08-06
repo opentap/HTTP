@@ -14,7 +14,6 @@ Using the OpenTAP CLI you are now able to download plugin packages from the Open
 
 To list and install plugin packages do the following in the command prompt: 
 ```
-cd %TAP_PATH%
 tap package list
 tap package install <Package Name>
 ```
@@ -29,12 +28,11 @@ tap package install "Developer's System CE" -y
 The plugin will soon be available as a package on [OpenTAP package repository](https://packages.opentap.io), but until then you can:
 
 ```
-git clone https://gitlab.com/Denrask/opentap-apitest.git
-cd opentap-apitest
+git clone https://gitlab.com/OpenTAP/Plugins/keysight/webapi-tester.git
+cd webapi-tester
 dotnet build WebApiTester.sln
 ```
 
-This will automatically build to your %TAP_PATH%/Packages/ApiTest folder.
 
 ## Using the Web API Tester Plugin
 
