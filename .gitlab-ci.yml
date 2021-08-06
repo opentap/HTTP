@@ -7,6 +7,7 @@ variables:
 
 stages:
   - build
+  - package
   - publish
 
 
@@ -18,7 +19,7 @@ Test:
       - dotnet test WebApiTester.Tests -c Release
 
 
-Build-x64:
+Build:
     stage: build
     tags:
         - gitlab-org
@@ -27,3 +28,17 @@ Build-x64:
     artifacts:
       paths:
         - "bin/Release/*"
+
+Package:
+    stage: package
+    tags:
+        - gitlab-org
+    image: opentapio/opentap:9.15-slim-ubuntu18.04
+    script:
+      - cd bin/Release
+      - tap package create package.xml
+    artifacts:
+      untracked: false
+      expire_in: 7 days
+      paths:
+        - "bin/Release/WebApiTester*.TapPackage"
