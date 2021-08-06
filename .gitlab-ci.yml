@@ -61,6 +61,7 @@ IntegrationTest:
       - cp bin/Release/WebApiTester*.TapPackage /opt/tap/WebApiTester.TapPackage
       - cp IntegrationTest/Test.TapPlan /opt/tap/Test.TapPlan
       - cd /opt/tap
+      - tap package install WebApiTester.TapPackage --non-interactive --dependencies
       - tap run Test.TapPlan
 
 Publish:
