@@ -19,25 +19,11 @@ Test:
 
 
 Build-x64:
-  stage: build
-  image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
-  tags:
-       - windows
-  script: 
+    stage: build
+    tags:
+        - gitlab-org
+    script: 
       - dotnet build WebApiTester -c Release 
-      - mv WebApiTester/bin/Release/*.TapPackage .
-  artifacts:
+    artifacts:
       paths:
-        - "*.TapPackage"
-
-
-Build-x86:
-  stage: build
-  image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
-  tags: [ docker, gce ]
-  script: 
-      - dotnet build WebApiTester -c Release 
-      - mv WebApiTester/bin/Release/*.TapPackage .
-  artifacts:
-      paths:
-        - "*.TapPackage"
+        - "bin/Release/*"

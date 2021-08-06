@@ -11,6 +11,7 @@
     <OutputPath>../bin/Release</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <LangVersion>Latest</LangVersion>
+    <CreateOpenTapPackage>false</CreateOpenTapPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
