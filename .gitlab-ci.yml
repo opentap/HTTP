@@ -19,9 +19,12 @@ Test:
 
 Build:
     stage: build
-    image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
-    tags: [ docker, windows ]
+    tags:
+        - gitlab-org
     script:
+      - apt-get update
+      - apt-get install locales
+      - locale-gen en_US.UTF-8
       - dotnet build WebApiTester -c Release 
       - mv WebApiTester/bin/Release/*.TapPackage .
     artifacts:
