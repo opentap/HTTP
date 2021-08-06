@@ -23,11 +23,11 @@
     <PackageReference Include="Jint" Version="3.0.0-beta-2033" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="OpenTAP" Version="$(OpenTapVersion)" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Reference Include="System.Net.Http" />
     <None Update="package.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
