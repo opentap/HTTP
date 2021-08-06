@@ -4,6 +4,7 @@ using OpenTap;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -150,7 +151,9 @@ assert.Equals(json.value, 'Hello TAP');" },
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
                 var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
+                var watch = Stopwatch.StartNew();
                 response = HttpClient.SendAsync(request, tokens.Token).GetAwaiter().GetResult();
+                Results.Publish("Request Duration", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
