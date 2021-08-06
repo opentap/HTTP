@@ -148,12 +148,12 @@ assert.Equals(json.value, 'Hello TAP');" },
             HttpResponseMessage response;
             try
             {
-                var watch = Stopwatch.StartNew();
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
                 var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
+                var watch = Stopwatch.StartNew();
                 response = HttpClient.SendAsync(request, tokens.Token).GetAwaiter().GetResult();
-                Results.Publish("Request Duration", watch.Elapsed);
+                Results.Publish("Request Duration", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
