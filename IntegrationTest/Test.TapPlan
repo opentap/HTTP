@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestPlan type="OpenTap.TestPlan" Locked="false">
+  <Steps>
+    <TestStep type="OpenTap.Plugins.BasicSteps.ParallelStep" Version="9.15.1+b41dd9c7" Id="c7ba281a-364f-4169-bfee-ed6242885a38">
+      <Enabled>true</Enabled>
+      <Name>Parallel</Name>
+      <ChildTestSteps>
+        <TestStep type="WebApiTester.RestApiEnvironment" Version="0.0.0" Id="90f08bd7-b876-4b0e-a030-58c177e9c3db">
+          <BaseAddress>https://fakerapi.it/api/v1</BaseAddress>
+          <PublicEnvironmentVariables />
+          <PublicGlobalVariables />
+          <Enabled>true</Enabled>
+          <Name>{Host} Environment</Name>
+          <ChildTestSteps>
+            <TestStep type="WebApiTester.RequestStep" Version="0.0.0" Id="836a8f7c-a9cc-45e4-9bce-7c4b682b6040">
+              <Endpoint>/persons?_quantity=1&amp;_gender=male&amp;_birthday_start=2005-01-01&amp;_seed=1337</Endpoint>
+              <Method>GET</Method>
+              <Headers />
+              <BodyType>None</BodyType>
+              <Body></Body>
+              <UseTimeout>
+                <Value>00:01:00</Value>
+                <IsEnabled>false</IsEnabled>
+              </UseTimeout>
+              <BodyFormData />
+              <BodyBinary />
+              <BodyFormUrlEncoded />
+              <AvailableSnippets></AvailableSnippets>
+              <ResponseAction>RunTests, Print</ResponseAction>
+              <ResponseTests>
+                <Base64>dmFyIGpzb24gPSBKU09OLnBhcnNlKHRhcC5SZXNwb25zZS5Cb2R5KTsNCmFzc2VydC5lcXVhbHModGFwLnJlc3BvbnNlLnN0YXR1c0NvZGUsIDIwMCk7DQphc3NlcnQuRXF1YWxzKGpzb24uZGF0YVswXS5maXJzdG5hbWUsICdOZWxzb24nKTsNCmFzc2VydC5FcXVhbHMoanNvbi5kYXRhWzBdLmdlbmRlciwgJ21hbGUnKTsNCmFzc2VydC5FcXVhbHMoanNvbi5kYXRhWzBdLmZpcnN0bmFtZSwgJ05lbHNvbicpOw0K</Base64>
+              </ResponseTests>
+              <SaveToFile></SaveToFile>
+              <HttpRequestFailBehavior>Error</HttpRequestFailBehavior>
+              <Enabled>true</Enabled>
+              <Name>{Http Method} {Endpoint}</Name>
+              <ChildTestSteps />
+              <BreakConditions>Inherit</BreakConditions>
+              <OpenTap.Description />
+            </TestStep>
+          </ChildTestSteps>
+          <BreakConditions>Inherit</BreakConditions>
+          <OpenTap.Description />
+        </TestStep>
+        <TestStep type="WebApiTester.RestApiEnvironment" Version="0.0.0" Id="ac0486a4-79cf-49ba-84ec-af47325fcd50">
+          <BaseAddress>https://pokeapi.co/api/v2/</BaseAddress>
+          <PublicEnvironmentVariables />
+          <PublicGlobalVariables />
+          <Enabled>true</Enabled>
+          <Name>{Host} Environment (1)</Name>
+          <ChildTestSteps>
+            <TestStep type="WebApiTester.RequestStep" Version="0.0.0" Id="01bfa81f-7f18-43e9-bc66-a2edb0a44560">
+              <Endpoint>pokemon/129</Endpoint>
+              <Method>GET</Method>
+              <Headers />
+              <BodyType>None</BodyType>
+              <Body></Body>
+              <UseTimeout>
+                <Value>00:01:00</Value>
+                <IsEnabled>false</IsEnabled>
+              </UseTimeout>
+              <BodyFormData />
+              <BodyBinary />
+              <BodyFormUrlEncoded />
+              <AvailableSnippets></AvailableSnippets>
+              <ResponseAction>RunTests, Print</ResponseAction>
+              <ResponseTests>
+                <Base64>dmFyIGpzb24gPSBKU09OLnBhcnNlKHRhcC5SZXNwb25zZS5Cb2R5KTsNCmFzc2VydC5lcXVhbHModGFwLnJlc3BvbnNlLnN0YXR1c0NvZGUsIDIwMCk7DQphc3NlcnQuRXF1YWxzKGpzb24ubmFtZSwgJ21hZ2lrYXJwJyk7DQphc3NlcnQuRXF1YWxzKGpzb24ubW92ZXNbMV0ubW92ZS5uYW1lLCAnc3BsYXNoJyk7</Base64>
+              </ResponseTests>
+              <SaveToFile></SaveToFile>
+              <HttpRequestFailBehavior>Error</HttpRequestFailBehavior>
+              <Enabled>true</Enabled>
+              <Name>{Http Method} {Endpoint} (1)</Name>
+              <ChildTestSteps />
+              <BreakConditions>Inherit</BreakConditions>
+              <OpenTap.Description />
+            </TestStep>
+          </ChildTestSteps>
+          <BreakConditions>Inherit</BreakConditions>
+          <OpenTap.Description />
+        </TestStep>
+      </ChildTestSteps>
+      <BreakConditions>Inherit</BreakConditions>
+    </TestStep>
+  </Steps>
+  <BreakConditions>Inherit</BreakConditions>
+  <OpenTap.Description />
+  <Package.Dependencies>
+    <Package Name="OpenTAP" Version="9.15.1+b41dd9c7" />
+  </Package.Dependencies>
+</TestPlan>
