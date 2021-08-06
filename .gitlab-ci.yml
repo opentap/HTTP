@@ -46,3 +46,18 @@ Package:
       expire_in: 7 days
       paths:
         - "bin/Release/WebApiTester*.TapPackage"
+
+
+Publish:
+    stage: publish
+    tags:
+        - gitlab-org
+    image: opentapio/opentap:9.15-slim-ubuntu18.04
+    dependencies:
+      - Package
+    needs:
+      - Package
+    script:
+      - cd bin/Release
+      - ./tap package install -f PackagePublish --version beta
+      - ./tap package publish -r http://packages.opentap.io -k $PUBLIC_REPO_PASS *.TapPackage
