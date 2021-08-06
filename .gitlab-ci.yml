@@ -59,6 +59,10 @@ Publish:
     needs:
       - Build
       - Package
+    only:
+      - tags
+      - /^release.*$/
+      - "integration"
     script:
       - cd bin/Release
       - ./tap package install -f PackagePublish --version beta
