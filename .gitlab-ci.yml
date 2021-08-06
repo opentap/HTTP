@@ -57,6 +57,7 @@ Publish:
       - Build
       - Package
     needs:
+      - Build
       - Package
     script:
       - cd bin/Release
