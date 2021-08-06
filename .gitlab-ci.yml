@@ -54,9 +54,9 @@ IntegrationTest:
         - gitlab-org
     image: opentapio/opentap:9.15-slim-ubuntu18.04
     dependencies:
-      - Build
+      - Package
     needs:
-      - Build
+      - Package
     script:
       - cp bin/Release/WebApiTester*.TapPackage opt/tap/WebApiTester.TapPackage
       - cp IntegrationTest/Test.TapPlan opt/tap/Test.TapPlan
