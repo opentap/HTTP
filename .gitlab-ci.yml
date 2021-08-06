@@ -21,6 +21,8 @@ Test:
 Build-x64:
   stage: build
   image: mcr.microsoft.com/dotnet/framework/sdk:4.7.2
+  tags:
+       - windows
   script: 
       - dotnet build WebApiTester -c Release 
       - mv WebApiTester/bin/Release/*.TapPackage .
