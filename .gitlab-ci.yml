@@ -54,6 +54,7 @@ Publish:
         - gitlab-org
     image: opentapio/opentap:9.15-slim-ubuntu18.04
     dependencies:
+      - Build
       - Package
     needs:
       - Package
