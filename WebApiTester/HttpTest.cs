@@ -1,6 +1,5 @@
 ﻿using Jint;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OpenTap;
 using System;
 using System.Collections.Generic;
@@ -10,10 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Serialization;
 using WebApiTester.TestResponseExtension;
 
 namespace WebApiTester

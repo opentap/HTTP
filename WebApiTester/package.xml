@@ -11,7 +11,7 @@
     </Links>
   </Description>
   <Files>
-    <File Path="Packages/WebApiTester/WebApiTester.dll">
+    <File Path="Packages/WebApiTester/WebApiTester.dll" SourcePath="WebApiTester.dll">
       <SetAssemblyInfo Attributes="Version"/>
     </File>
   </Files>
