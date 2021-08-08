@@ -42,7 +42,7 @@ namespace WebApiTester
         }
         public RestApiEnvironment()
         {
-            Name = "{BaseAddress} Environment";
+            Name = "{Host} Environment";
             Rules.Add(() => !string.IsNullOrWhiteSpace(BaseAddress), "No host address specified", nameof(BaseAddress));
             Rules.Add(() => !BaseAddress.StartsWith("http://") || !BaseAddress.StartsWith("https://"), "Host must start with 'http://' or 'https://'", nameof(BaseAddress));
         }
