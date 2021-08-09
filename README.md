@@ -25,12 +25,10 @@ tap package install "Developer's System CE" -y
 
 ## Installing the Web API Tester plugin
 
-The plugin will soon be available as a package on [OpenTAP package repository](https://packages.opentap.io), but until then you can:
+The plugin is available as a package on [OpenTAP package repository](https://packages.opentap.io). To install, use the following command in an OpenTAP installation:
 
 ```
-git clone https://gitlab.com/OpenTAP/Plugins/keysight/webapi-tester.git
-cd webapi-tester
-dotnet build WebApiTester.sln
+tap package install WebApiTester -r packages.opentap.io
 ```
 
 
