@@ -8,7 +8,6 @@ variables:
 stages:
   - build
   - package
-  - integration-test
   - publish
 
 
@@ -48,21 +47,21 @@ Package:
       paths:
         - "bin/Release/WebApiTester*.TapPackage"
 
-IntegrationTest:
-    stage: integration-test
-    tags:
-        - gitlab-org
-    image: opentapio/opentap:9.15-slim-ubuntu18.04
-    dependencies:
-      - Package
-    needs:
-      - Package
-    script:
-      - cp bin/Release/WebApiTester*.TapPackage /opt/tap/WebApiTester.TapPackage
-      - cp IntegrationTest/Test.TapPlan /opt/tap/Test.TapPlan
-      - cd /opt/tap
-      - tap package install WebApiTester.TapPackage --non-interactive --dependencies
-      - tap run Test.TapPlan
+#IntegrationTest:
+#    stage: integration-test
+#    tags:
+#        - gitlab-org
+#    image: opentapio/opentap:9.15-slim-ubuntu18.04
+#    dependencies:
+#      - Package
+#    needs:
+#      - Package
+#    script:
+#      - cp bin/Release/WebApiTester*.TapPackage /opt/tap/WebApiTester.TapPackage
+#      - cp IntegrationTest/Test.TapPlan /opt/tap/Test.TapPlan
+#      - cd /opt/tap
+#      - tap package install WebApiTester.TapPackage --non-interactive --dependencies
+#      - tap run Test.TapPlan
 
 Publish:
     stage: publish
