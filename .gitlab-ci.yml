@@ -74,7 +74,6 @@ Publish:
     needs:
       - Build
       - Package
-      - IntegrationTest
     only:
       - tags
       - /^release.*$/
