@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<Package Name="WebApiTester" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux">
+<?xml version="1.0" encoding="UTF-8"?>
+<Package Name="WebApiTester" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux,Macos">
   <Description>
     Keysight internal OpenTAP plugin for testing REST/HTTP API's. Send HTTP requests and test HTTP response using JavaScript.
     <Status>Development</Status>
@@ -7,7 +7,7 @@
       <Contact Email="dennis.rasmussen@keysight.com" Name="Developer"/>
     </Contacts>
     <Links>
-      <Link Description="Source code for OpenTAP" Name="OpenTAP" Url="https://gitlab.com/OpenTAP/opentap"/>
+      <Link Description="Source code for OpenTAP" Name="OpenTAP" Url="https://github.com/opentap/opentap"/>
     </Links>
   </Description>
   <Files>
