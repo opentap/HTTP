@@ -146,6 +146,13 @@ assert.Equals(json.value, 'Hello TAP');" },
             HttpRequestMessage request = SetupRequest(environment.BaseAddress, environment.EnvironmentVariables, environment.GlobalVariables);
             HttpTest httpTest = HttpTest.Generate(request, environment.EnvironmentVariables, environment.GlobalVariables);
             HttpResponseMessage response;
+
+            if (request.Headers.Contains("Cookie"))
+            {
+                var handler = new HttpClientHandler() { UseCookies = false };
+                HttpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(environment.BaseAddress) };
+            }
+
             try
             {
                 var cts = new CancellationTokenSource();
