@@ -11,13 +11,16 @@
     <OutputPath>../bin/Release</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <LangVersion>Latest</LangVersion>
-    <CreateOpenTapPackage>false</CreateOpenTapPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <!-- We are setting TargetFramework in debug configuration, otherwise Visual Studio tries to attach a .NET Core debugger. That will not work, because the program we open is a .NET Framework executable -->
     <TargetFramework>net462</TargetFramework>
     <OutputPath>../bin/Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <CreateOpenTapPackage>true</CreateOpenTapPackage>
   </PropertyGroup>
   
   <ItemGroup>

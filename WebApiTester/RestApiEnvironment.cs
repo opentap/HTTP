@@ -32,6 +32,10 @@ namespace WebApiTester
         public VariableHandler GlobalVariables = new VariableHandler(_GlobalVariables);
         public override void Run()
         {
+            var host = Environment.GetEnvironmentVariable("Host");
+            if (host != null)
+                BaseAddress = host;
+            
             if (GetParent<RestApiEnvironment>() is object)
             {
                 foreach (KeyValuePair<string, string> variable in GetParent<RestApiEnvironment>().EnvironmentVariables)
