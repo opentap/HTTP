@@ -17,6 +17,7 @@
     <!-- We are setting TargetFramework in debug configuration, otherwise Visual Studio tries to attach a .NET Core debugger. That will not work, because the program we open is a .NET Framework executable -->
     <TargetFramework>net462</TargetFramework>
     <OutputPath>../bin/Debug</OutputPath>
+    <CreateOpenTapPackage>false</CreateOpenTapPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
