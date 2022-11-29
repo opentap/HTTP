@@ -59,4 +59,4 @@ jobs:
         run: tap package install -f PackagePublish --version beta
       - name: Publish
         run: |
-          tap package publish -r http://packages.opentap.io -k ${{ secrets.REPO_PASS }} .*.TapPackage
+          tap package publish -r http://packages.opentap.io -k ${{ secrets.REPO_PASS }} *.TapPackage
