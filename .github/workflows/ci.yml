@@ -49,6 +49,8 @@ jobs:
         with:
           name: package
           path: ./
+      - name: Move packages
+        run: mv bin/Release/*.TapPackage .
       - name: Setup OpenTAP
         uses: opentap/setup-opentap@v1.0
         with:
