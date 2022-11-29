@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run unit tests
-        run: dotnet test WebApiTester.Tests -c Release
+        run: dotnet test HttpSteps.Tests -c Release
 
   Build:
     runs-on: ubuntu-latest
