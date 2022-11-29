@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using OpenTap;
 using OpenTap.Cli;
 
-namespace HttpSteps;
+namespace HTTP;
 
 [Display("convert", Group: "webapi")]
 public class ApiTestCliAction : ICliAction

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenTap;
 
-namespace HttpSteps;
+namespace HTTP;
 
 [Display("Request", Group: "Web API Tester")]
 public class RequestStep : TestStep

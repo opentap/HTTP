@@ -12,7 +12,7 @@ public class TestResponseExtensionTests
     {
         MyListener lis = new MyListener();
         Log.AddListener(lis);
-        HttpSteps.Console console = new HttpSteps.Console();
+        HTTP.Console console = new HTTP.Console();
         string testString = @"Testing this
 awesome
 multiline

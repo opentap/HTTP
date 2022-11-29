@@ -2,7 +2,7 @@
 using System.Text;
 using OpenTap;
 
-namespace HttpSteps.TestResponseExtension;
+namespace HTTP.TestResponseExtension;
 
 [Display("crypto")]
 public class Crypto : ITestResponseExtension

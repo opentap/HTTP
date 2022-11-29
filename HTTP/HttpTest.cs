@@ -7,12 +7,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Xml;
-using HttpSteps.TestResponseExtension;
+using HTTP.TestResponseExtension;
 using Jint;
 using Newtonsoft.Json;
 using OpenTap;
 
-namespace HttpSteps;
+namespace HTTP;
 
 internal class HttpTest
 {
@@ -20,7 +20,7 @@ internal class HttpTest
     private VariableHandler GlobalVariables { get; set; }
     static TraceSource log = Log.CreateSource("Web API Tester");
     TraceSource javascriptLog = Log.CreateSource("Javascript");
-    private const string JavascriptModulesDirectory = "Packages/HttpSteps/Packages";
+    private const string JavascriptModulesDirectory = "Packages/HTTP/Packages";
     public Assert Tests { get; set; } = null;
 
     private static List<ITestResponseExtension> TestResponseExtensions { get; set; } = new List<ITestResponseExtension>();
