@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Package Name="WebApiTester" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux,Macos">
+<Package Name="HttpSteps" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux,Macos">
   <Description>
     Keysight internal OpenTAP plugin for testing REST/HTTP API's. Send HTTP requests and test HTTP response using JavaScript.
     <Status>Development</Status>
@@ -11,7 +11,7 @@
     </Links>
   </Description>
   <Files>
-    <File Path="Packages/WebApiTester/WebApiTester.dll" SourcePath="WebApiTester.dll">
+    <File Path="Packages/HttpSteps/HttpSteps.dll" SourcePath="HttpSteps.dll">
       <SetAssemblyInfo Attributes="Version"/>
     </File>
   </Files>

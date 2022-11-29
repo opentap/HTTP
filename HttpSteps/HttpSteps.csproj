@@ -15,12 +15,12 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <!-- We are setting TargetFramework in debug configuration, otherwise Visual Studio tries to attach a .NET Core debugger. That will not work, because the program we open is a .NET Framework executable -->
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputPath>../bin/Debug</OutputPath>
     <CreateOpenTapPackage>false</CreateOpenTapPackage>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <CreateOpenTapPackage>true</CreateOpenTapPackage>
   </PropertyGroup>
   
@@ -38,7 +38,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AdditionalOpenTapPackage Include="Editor CE" Condition="!Exists('$(OutDir)Packages/Editor CE/package.xml')" Version="$(OpenTapVersion)" />
-  </ItemGroup>
 </Project>

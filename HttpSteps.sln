@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTester", "WebApiTester\WebApiTester.csproj", "{681A158C-8038-4CE8-B544-CF6C86FDFD55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpSteps", "HttpSteps\HttpSteps.csproj", "{681A158C-8038-4CE8-B544-CF6C86FDFD55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTester.Tests", "WebApiTester.Tests\WebApiTester.Tests.csproj", "{8E5E1AB7-521E-4DE5-A9DF-F68573EB5F9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpSteps.Tests", "HttpSteps.Tests\HttpSteps.Tests.csproj", "{8E5E1AB7-521E-4DE5-A9DF-F68573EB5F9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
