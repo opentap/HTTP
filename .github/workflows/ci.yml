@@ -30,12 +30,14 @@ jobs:
         run: git fetch -f origin ${{ github.ref }}:${{ github.ref }} # Fixes an issue with actions/checkout@v2. See https://github.com/actions/checkout/issues/290
       - name: Build
         run: dotnet build -c Release
+      - name: Move packages
+        run: mv bin/Release/*.TapPackage .
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: package
           retention-days: 5
-          path: "bin/Release/*"
+          path: "*.TapPackage"
 
   Publish:
     if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/release') || contains(github.ref, 'refs/tags/v')
@@ -49,8 +51,6 @@ jobs:
         with:
           name: package
           path: ./
-      - name: Move packages
-        run: mv bin/Release/*.TapPackage .
       - name: Setup OpenTAP
         uses: opentap/setup-opentap@v1.0
         with:
