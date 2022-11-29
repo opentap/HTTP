@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HttpSteps\HttpSteps.csproj" />
+    <ProjectReference Include="..\HTTP\HTTP.csproj" />
   </ItemGroup>
 
 </Project>

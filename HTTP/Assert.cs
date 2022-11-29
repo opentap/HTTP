@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HttpSteps;
+namespace HTTP;
 
 internal class Assert
 {

@@ -1,4 +1,4 @@
-﻿using HttpSteps;
+﻿using HTTP;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 

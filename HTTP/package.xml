@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Package Name="HttpSteps" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux,Macos">
+<Package Name="HTTP" xmlns="http://keysight.com/schemas/TAP/Package" Architecture="AnyCPU" Version="$(GitVersion)" OS="Windows,Linux,Macos">
   <Description>
-    Keysight internal OpenTAP plugin for testing REST/HTTP API's. Send HTTP requests and test HTTP response using JavaScript.
+    OpenTAP plugin for testing REST/HTTP API's. Send HTTP requests and test HTTP response using JavaScript.
     <Status>Development</Status>
     <Contacts>
       <Contact Email="dennis.rasmussen@keysight.com" Name="Developer"/>
@@ -10,8 +10,10 @@
       <Link Description="Source code for OpenTAP" Name="OpenTAP" Url="https://github.com/opentap/opentap"/>
     </Links>
   </Description>
+  <SourceUrl>https://github.com/opentap/HTTP</SourceUrl>
+  <SourceLicense>MIT</SourceLicense>
   <Files>
-    <File Path="Packages/HttpSteps/HttpSteps.dll" SourcePath="HttpSteps.dll">
+    <File Path="Packages/HTTP/HTTP.dll" SourcePath="HTTP.dll">
       <SetAssemblyInfo Attributes="Version"/>
     </File>
   </Files>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace HttpSteps;
+namespace HTTP;
 
 public class PostmanTestCollectionConverter
 {

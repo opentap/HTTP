@@ -6,9 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using OpenTap;
 
-[assembly: InternalsVisibleTo("HttpSteps.Tests")]
+[assembly: InternalsVisibleTo("HTTP.Tests")]
 
-namespace HttpSteps;
+namespace HTTP;
 
 [AllowAnyChild]
 [Display("API Environment", Group: "Web API Tester")]
