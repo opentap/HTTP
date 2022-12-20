@@ -10,7 +10,7 @@ using OpenTap.Cli;
 
 namespace HTTP;
 
-[Display("convert", Group: "webapi")]
+[Display("convert", Group: "HTTP")]
 public class ApiTestCliAction : ICliAction
 {
     [UnnamedCommandLineArgument("PostmanCollection")]

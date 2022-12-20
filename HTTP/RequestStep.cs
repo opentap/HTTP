@@ -13,7 +13,7 @@ using OpenTap;
 
 namespace HTTP;
 
-[Display("Request", Group: "Web API Tester")]
+[Display("Request", Group: "HTTP")]
 public class RequestStep : TestStep
 {
     internal static HttpClient HttpClient = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan };
@@ -278,8 +278,6 @@ assert.Equals(json.value, 'Hello TAP');" },
         System.Net.Http.HttpMethod httpMethod = SetRequestMethod();
 
         var endpoint = TryExpand(Endpoint, environmentVariables, globalVariables);
-        if (!endpoint.StartsWith("/"))
-            endpoint = $"/{endpoint}";
         Uri uri = new Uri(baseUri + endpoint, UriKind.Absolute);
         Log.Info($"{Method.ToString()} Request: {uri.ToString()}");
         HttpRequestMessage request = new HttpRequestMessage(httpMethod, uri);

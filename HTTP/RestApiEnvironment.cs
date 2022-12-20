@@ -11,10 +11,10 @@ using OpenTap;
 namespace HTTP;
 
 [AllowAnyChild]
-[Display("API Environment", Group: "Web API Tester")]
+[Display("API Environment", Group: "HTTP")]
 public class RestApiEnvironment : TestStep
 {
-    [Display("Host", Group: "Web Api Address")]
+    [Display("Host")]
     public string BaseAddress { get; set; } = "http://127.0.0.1:5000";
 
     [Display("Environment Variables", Group: "Variables")]
