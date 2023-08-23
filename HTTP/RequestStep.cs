@@ -88,6 +88,7 @@ public class RequestStep : TestStep
         { "Get global variable", "tap.GetGlobalVariable(key);" },
         { "Remove global variable", "tap.RemoveGlobalVariable(key);" },
         { "Response body as JSON", "var json = JSON.parse(tap.Response.Body);" },
+        { "Response body as byte array", "var bytes = tap.Response.arrayBuffer;" },
         { "JSON value check", @"var json = JSON.parse(tap.Response.Body);
 assert.Equals(json.value, 'Hello TAP');" },
         {"Alert message", "alert('Your message');" }
