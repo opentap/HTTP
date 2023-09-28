@@ -15,8 +15,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Run unit tests
-        run: dotnet test HTTP.Tests -c Release
+      - name: Build
+        run: dotnet build
+      - name: Test
+        run: bin/Debug/tap unit-test run
 
   Build:
     runs-on: ubuntu-latest
@@ -40,7 +42,7 @@ jobs:
           path: "*.TapPackage"
 
   Publish:
-    if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/release') || contains(github.ref, 'refs/tags/v')
+    
     environment: packages.opentap.io
     runs-on: ubuntu-latest
     needs:
