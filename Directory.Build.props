@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
-    <OpenTapVersion>9.15.1</OpenTapVersion>
+    <OpenTapVersion>9.22.0-beta.24</OpenTapVersion>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 </Project>

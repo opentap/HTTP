@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Newtonsoft.Json;
@@ -16,6 +17,9 @@ namespace HTTP;
 [Display("Request", Group: "HTTP")]
 public class RequestStep : TestStep
 {
+    [Display("Base Address")]
+    public string BaseAddress { get; set; }
+    
     internal static HttpClient HttpClient = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan };
     [Display("Endpoint", Description: "Endpoint to send request against", Group: "Request", Order: 10)]
     public string Endpoint { get; set; } = "/api/values";
@@ -52,6 +56,21 @@ public class RequestStep : TestStep
     [EnabledIf("Method", HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PUT, HttpMethod.TRACE, HideIfDisabled = true)]
     [Display("x-www-form-urlencoded", Description: "Attach body content to the request", Group: "Request", Order: 30)]
     public List<ValuePair> BodyFormUrlEncoded { get; set; } = new List<ValuePair>();
+
+    public bool OutputEnabled => ResponseAction.HasFlag(ResponseAction.ToOutput);
+    
+    [EnabledIf(nameof(OutputEnabled), HideIfDisabled = true)]
+    [Output]
+    [Display("Output", "The response body", Group:"Response", Order: 96)]
+    [Layout(LayoutMode.Normal, maxRowHeight:5)]
+    [Browsable(true)]
+    public string Output { get; private set; }
+    
+    [Display("Response Code", "The response code", Group:"Response", Order: 96)]
+    [Output]
+    [Browsable(true)]
+    public string ResponseCode { get; private set; }
+    
     #endregion
 
 
@@ -99,9 +118,9 @@ assert.Equals(json.value, 'Hello TAP');" },
     #region Response
 
     [Display("Response action", Description: "Response content actions", Group: "Response", Order: 50)]
-    public ResponseAction ResponseAction { get; set; } = ResponseAction.RunTests;
+    public ResponseAction ResponseAction { get; set; } = ResponseAction.RunJavaScript;
 
-    public bool ResponseActionRunTests => ResponseAction.HasFlag(ResponseAction.RunTests);
+    public bool ResponseActionRunTests => ResponseAction.HasFlag(ResponseAction.RunJavaScript);
     public bool ResponseActionPrint => ResponseAction.HasFlag(ResponseAction.Print);
     public bool ResponseActionSaveToFile => ResponseAction.HasFlag(ResponseAction.SaveToFile);
 
@@ -117,113 +136,98 @@ assert.Equals(json.value, 'Hello TAP');" },
 
     #endregion
 
-
-    [Display("HTTP Request fail behavior", Description: "Step verdict when HTTP request fails", Group: "Misc", Order: 9000)]
-    public Verdict HttpRequestFailBehavior { get; set; } = Verdict.Error;
-
     public RequestStep()
     {
         Name = "{Http Method} {Endpoint}";
     }
 
-    public override void PrePlanRun()
-    {
-        RestApiEnvironment environment = GetParent<RestApiEnvironment>();
-        if (environment is null)
-        {
-            throw new InvalidOperationException($"This step must have a 'API Environment' step in upwards parent chain");
-        }
-        base.PrePlanRun();
-    }
 
     public override void Run()
     {
-        if (TapThread.Current.AbortToken.IsCancellationRequested)
-            return;
-        RestApiEnvironment environment = GetParent<RestApiEnvironment>();
-
-        HttpRequestMessage request = SetupRequest(environment.BaseAddress, environment.EnvironmentVariables, environment.GlobalVariables);
-        HttpTest httpTest = HttpTest.Generate(request, environment.EnvironmentVariables, environment.GlobalVariables);
+        
+        HttpRequestMessage request = SetupRequest(BaseAddress);
+        JavaScriptRunner javaScriptRunner = JavaScriptRunner.Generate(request);
         HttpResponseMessage response;
 
         if (request.Headers.Contains("Cookie"))
         {
             var handler = new HttpClientHandler() { UseCookies = false };
-            HttpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(environment.BaseAddress) };
+            HttpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(BaseAddress) };
         }
 
-        try
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
+        var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
+        var watch = Stopwatch.StartNew();
+        response = HttpClient.SendAsync(request, tokens.Token).GetAwaiter().GetResult();
+        Results.Publish("Request Duration", watch.ElapsedMilliseconds);
+        ResponseCode = response.StatusCode.ToString();
+
+        javaScriptRunner.SetResponse(response);
+
+        
+        if (OutputEnabled)
         {
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
-            var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
-            var watch = Stopwatch.StartNew();
-            response = HttpClient.SendAsync(request, tokens.Token).GetAwaiter().GetResult();
-            Results.Publish("Request Duration", watch.ElapsedMilliseconds);
+            Output = response.Content.ReadAsStringAsync().Result;
         }
-        catch (Exception ex)
-        {
-            Log.Error(ex);
-            UpgradeVerdict(HttpRequestFailBehavior);
-            return;
-        }
-
-        httpTest.SetResponse(response);
-
+        
         if (ResponseActionSaveToFile)
-            using (FileStream fs = new FileStream(SaveToFile, FileMode.OpenOrCreate))
-                response.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+            if (OutputEnabled)
+            {
+                File.WriteAllText(Output, SaveToFile);
+            }
+            else
+            {
+                using (FileStream fs = new FileStream(SaveToFile, FileMode.OpenOrCreate))
+                    response.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+            }
 
         if (ResponseActionRunTests)
         {
-            RunTests(httpTest, environment);
-        }
-        else
-        {
-            UpgradeVerdict(Verdict.Pass);
+            RunScript(javaScriptRunner);
         }
 
-        if (ResponseActionPrint && !(ResponseActionRunTests && !httpTest.Tests.Passed))
-            PrintResponse(httpTest, LogEventType.Information);
+        if (ResponseActionPrint && !(ResponseActionRunTests ))
+            PrintResponse(javaScriptRunner, LogEventType.Information);
 
         RunChildSteps();
     }
 
-    private void RunTests(HttpTest httpTest, RestApiEnvironment environment)
+    private void RunScript(JavaScriptRunner javaScriptRunner)
     {
-        var expandedResponseTests = TryExpand(ResponseTests, environment.EnvironmentVariables, environment.GlobalVariables);
+        var expandedResponseTests = ResponseTests;
 
         try
         {
-            httpTest.RunTests(expandedResponseTests);
-            if (!httpTest.Tests.Passed)
+            javaScriptRunner.RunTests(expandedResponseTests, this);
+            /*if (!javaScriptRunner.Asserts.Passed)
             {
                 UpgradeVerdict(Verdict.Fail);
-                PrintDetails(httpTest, expandedResponseTests);
+                PrintDetails(javaScriptRunner, expandedResponseTests);
             }
             else
             {
                 UpgradeVerdict(Verdict.Pass);
-            }
+            }*/
         }
         catch (Exception ex)
         {
             UpgradeVerdict(Verdict.Fail);
             Log.Error(ex);
-            PrintDetails(httpTest, expandedResponseTests);
+            PrintDetails(javaScriptRunner, expandedResponseTests);
         }
     }
 
-    private void PrintResponse(HttpTest httpTest, LogEventType logLevel)
+    private void PrintResponse(JavaScriptRunner javaScriptRunner, LogEventType logLevel)
     {
         List<string> output = new List<string>();
         output.Add("Response:");
-        output.Add($"  StatusCode: {httpTest.response.statusCode}");
+        output.Add($"  StatusCode: {javaScriptRunner.response.statusCode}");
         output.Add($"  Headers:");
-        foreach (var header in httpTest.response.Headers)
+        foreach (var header in javaScriptRunner.response.Headers)
             output.Add($"    {header.Key} = {header.Value}");
 
-        string body = httpTest.response.body;
+        string body = javaScriptRunner.response.body;
 
         if (!string.IsNullOrWhiteSpace(body) && body.Length <= 10000)
         {
@@ -248,7 +252,7 @@ assert.Equals(json.value, 'Hello TAP');" },
             Log.TraceEvent(logLevel, 1, line);
     }
 
-    private void PrintDetails(HttpTest httpTest, string javascriptTests)
+    private void PrintDetails(JavaScriptRunner javaScriptRunner, string javascriptTests)
     {
         if (Name.Equals("{Http Method} {Endpoint}"))
             Log.Error($"{Method} {Endpoint} failed!");
@@ -256,31 +260,31 @@ assert.Equals(json.value, 'Hello TAP');" },
             Log.Error($"{Name} failed!");
 
         Log.Error("Errors:");
-        foreach (var error in httpTest.Tests.Errors)
-            Log.Error("  " + error);
+        /*foreach (var error in javaScriptRunner.Asserts.Errors)
+            Log.Error("  " + error);*/
 
         Log.Error("Request:");
-        Log.Error($"  URI: {httpTest.Request.Method} {httpTest.Request.Path}");
+        Log.Error($"  URI: {javaScriptRunner.Request.Method} {javaScriptRunner.Request.Path}");
         Log.Error($"  Headers:");
-        foreach (var header in httpTest.Request.Headers)
+        foreach (var header in javaScriptRunner.Request.Headers)
             Log.Error($"    {header.Key} = {header.Value}");
 
         Log.Error($"  Body content:");
-        foreach (var line in httpTest.Request.Body.Split(new string[1] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+        foreach (var line in javaScriptRunner.Request.Body.Split(new string[1] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
             Log.Error($"    {line}");
 
-        PrintResponse(httpTest, LogEventType.Error);
+        PrintResponse(javaScriptRunner, LogEventType.Error);
 
         Log.Error($"Javascript tests:{Environment.NewLine}{javascriptTests}");
     }
 
-    private HttpRequestMessage SetupRequest(string baseUri, VariableHandler environmentVariables, VariableHandler globalVariables)
+    private HttpRequestMessage SetupRequest(string baseUri)
     {
         System.Net.Http.HttpMethod httpMethod = SetRequestMethod();
 
-        var endpoint = TryExpand(Endpoint, environmentVariables, globalVariables);
+        var endpoint = Endpoint;
         Uri uri = new Uri(baseUri + endpoint, UriKind.Absolute);
-        Log.Info($"{Method.ToString()} Request: {uri.ToString()}");
+        Log.Info($"{Method.ToString()} Request: {uri}");
         HttpRequestMessage request = new HttpRequestMessage(httpMethod, uri);
 
         // Add content
@@ -288,7 +292,7 @@ assert.Equals(json.value, 'Hello TAP');" },
         {
             if (BodyType == RequestBodyType.Raw)
             {
-                string expandedBody = TryExpand(Body, environmentVariables, globalVariables);
+                string expandedBody = Body;
                 request.Content = new StringContent(expandedBody);
             }
             if (BodyType == RequestBodyType.FormData) // form-data
@@ -314,39 +318,40 @@ assert.Equals(json.value, 'Hello TAP');" },
                 request.Content = new FormUrlEncodedContent(BodyFormUrlEncoded.Select(p => new KeyValuePair<string, string>(p.Key, p.Value)));
         }
 
+        foreach (var headerMember in TypeData.GetTypeData(this).GetMembers().Where(mem => mem.HasAttribute<HeaderAttribute>()))
+        {
+            var value = headerMember.GetValue(this);
+            string toSet = null;
+            if (value is string str)
+            {
+                toSet = str;
+            }else if (value is SecureString sstr)
+            {
+                toSet = sstr.ConvertToUnsecureString();
+            }
+            if (toSet == null)
+                throw new InvalidOperationException();
+            request.Headers.Add(headerMember.Name, toSet);
+        }
+        
         foreach (var header in Headers)
         {
             try
             {
-                request.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                request.Headers.Add(header.Key, header.Value);
             }
             catch (InvalidOperationException)
             {
                 if (request.Content is object)
                 {
-                    string headerKey = TryExpand(header.Key, environmentVariables, globalVariables);
+                    string headerKey = header.Key;
                     if (request.Content.Headers.Contains(headerKey))
                         request.Content.Headers.Remove(headerKey);
-                    request.Content.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                    request.Content.Headers.Add(header.Key, header.Value);
                 }
             }
         }
         return request;
-    }
-
-    public string TryExpand(string value, VariableHandler environmentVariables, VariableHandler globalVariables)
-    {
-        var pattern = @"\{{(.*?)\}}";
-        var matches = Regex.Matches(value, pattern);
-        foreach (var match in matches)
-        {
-            string escapedMatch = match.ToString().Replace("{{", "").Replace("}}", "");
-            if (environmentVariables.ContainsKey(escapedMatch))
-                value = value.Replace(match.ToString(), environmentVariables[escapedMatch]);
-            else if (globalVariables.ContainsKey(escapedMatch))
-                value = value.Replace(match.ToString(), globalVariables[escapedMatch]);
-        }
-        return value;
     }
 
     private System.Net.Http.HttpMethod SetRequestMethod()
@@ -380,74 +385,4 @@ assert.Equals(json.value, 'Hello TAP');" },
 
         return httpMethod;
     }
-}
-
-public class Header
-{
-    public string Key { get; set; }
-    public string Value { get; set; }
-}
-
-public enum HttpMethod
-{
-    POST,
-    GET,
-    DELETE,
-    PUT,
-    HEAD,
-    OPTIONS,
-    TRACE
-}
-
-public enum RequestBodyType
-{
-    [Display("none")]
-    None,
-    [Display("raw")]
-    Raw,
-    [Display("form-data")]
-    FormData,
-    [Display("binary")]
-    Binary,
-    [Display("x-www-form-urlencoded")]
-    FormUrlEncoded
-}
-
-[Flags]
-public enum ResponseAction
-{
-    [Display("Run Tests")]
-    RunTests = 2,
-    [Display("Print to log")]
-    Print = 4,
-    [Display("Save to file")]
-    SaveToFile = 8
-}
-
-public class FileUpload
-{
-    [Display("Key", Order: 1)]
-    public string Name { get; set; } = "file";
-
-    [Display("Value", Order: 2)]
-    [FilePath(FilePathAttribute.BehaviorChoice.Open)]
-    public string Value { get; set; }
-
-    [Display("Content Type", Order: 3)]
-    public string ContentType { get; set; } = "application/octet-stream";
-}
-
-public class ValuePair
-{
-    public string Key { get; set; }
-    public string Value { get; set; }
-}
-
-public enum TestFailBehavior
-{
-    Fail,
-    Pass,
-    Error,
-    NotSet,
-    Inconclusive
 }

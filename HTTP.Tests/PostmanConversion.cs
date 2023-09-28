@@ -6,12 +6,9 @@ using Assert = NUnit.Framework.Assert;
 
 namespace Tests;
 
-public class PostmanConversion
+[TestFixture]
+public class PostmanConversion 
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
 
 
     [Test]
