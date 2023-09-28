@@ -16,7 +16,8 @@ Test:
     tags:
         - gitlab-org
     script:
-      - dotnet test WebApiTester.Tests -c Release
+      - dotnet build
+      - bin/Debug/tap unit-test run
 
 
 Build:

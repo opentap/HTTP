@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using OpenTap;
 using OpenTap.Diagnostic;
+using OpenTap.UnitTest;
 
 namespace Tests;
 
-public class TestResponseExtensionTests
+public class TestResponseExtensionTests : ITestFixture
 {
     [Test]
     public void MultiLineConsoleLog()
