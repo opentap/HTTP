@@ -24,6 +24,9 @@ public class RequestStep : TestStep
     [Display("Headers", Description: "Attach headers to the request", Group: "Request", Order: 20)]
     public List<Header> Headers { get; set; } = new List<Header>();
 
+    [Display("Allow Unsecure", Description: "Allow unsecure/untrusted connection (not recommended)", Group: "Request", Order: 22)]
+    public bool Unsecure { get; set; } = false;
+
     #region bodytypes
     [EnabledIf("Method", HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PUT, HttpMethod.TRACE, HideIfDisabled = true)]
     [Display("Request Body Type", Group: "Request", Order: 25)]
@@ -145,6 +148,16 @@ assert.Equals(json.value, 'Hello TAP');" },
         HttpRequestMessage request = SetupRequest(environment.BaseAddress, environment.EnvironmentVariables, environment.GlobalVariables);
         HttpTest httpTest = HttpTest.Generate(request, environment.EnvironmentVariables, environment.GlobalVariables);
         HttpResponseMessage response;
+
+        if(Unsecure == true)
+        {
+            var handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            HttpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan };
+        }
 
         if (request.Headers.Contains("Cookie"))
         {
