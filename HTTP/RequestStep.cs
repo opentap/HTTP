@@ -170,8 +170,15 @@ assert.Equals(json.value, 'Hello TAP');" },
         {
             Output = response.Content.ReadAsStringAsync().Result;
         }
-        
+
         if (ResponseActionSaveToFile)
+        {
+            // ensure directory exists.
+            var parentDir = Path.GetDirectoryName(Path.GetFullPath(SaveToFile));
+            if(string.IsNullOrEmpty(parentDir) == false && !Directory.Exists(parentDir))
+                Directory.CreateDirectory(parentDir);
+            
+            
             if (OutputEnabled)
             {
                 File.WriteAllText(Output, SaveToFile);
@@ -181,7 +188,8 @@ assert.Equals(json.value, 'Hello TAP');" },
                 using (FileStream fs = new FileStream(SaveToFile, FileMode.OpenOrCreate))
                     response.Content.CopyToAsync(fs).GetAwaiter().GetResult();
             }
-
+            Log.Debug("Saved file to {0}", Path.GetFullPath(SaveToFile));
+        }
         if (ResponseActionRunTests)
         {
             RunScript(javaScriptRunner);
