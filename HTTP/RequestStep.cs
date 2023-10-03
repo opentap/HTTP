@@ -159,16 +159,16 @@ assert.Equals(json.value, 'Hello TAP');" },
         cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
         var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
         var watch = Stopwatch.StartNew();
-        response = HttpClient.SendAsync(request, tokens.Token).GetAwaiter().GetResult();
+        response = HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, tokens.Token).GetAwaiter().GetResult();
         Results.Publish("Request Duration", watch.ElapsedMilliseconds);
         ResponseCode = response.StatusCode.ToString();
 
-        javaScriptRunner.SetResponse(response);
+        if(ResponseActionRunTests)
+            javaScriptRunner.SetResponse(response);
 
-        
         if (OutputEnabled)
         {
-            Output = response.Content.ReadAsStringAsync().Result;
+            Output = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         }
 
         if (ResponseActionSaveToFile)
@@ -186,7 +186,7 @@ assert.Equals(json.value, 'Hello TAP');" },
             else
             {
                 using (FileStream fs = new FileStream(SaveToFile, FileMode.OpenOrCreate))
-                    response.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                    response.Content.CopyToAsync(fs).Wait(TapThread.Current.AbortToken);
             }
             Log.Debug("Saved file to {0}", Path.GetFullPath(SaveToFile));
         }
