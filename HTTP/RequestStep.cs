@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,7 +19,7 @@ public class RequestStep : TestStep
     [Display("Base Address")]
     public string BaseAddress { get; set; }
     
-    internal static HttpClient HttpClient = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan };
+    HttpClient httpClient = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan };
     [Display("Endpoint", Description: "Endpoint to send request against", Group: "Request", Order: 10)]
     public string Endpoint { get; set; } = "/api/values";
     [Display("Http Method", Description: "Http request method, e.g. GET or POST", Group: "Request", Order: 15)]
@@ -80,10 +79,7 @@ public class RequestStep : TestStep
     [EnabledIf("ResponseActionRunTests", true, HideIfDisabled = true)]
     public string AvailableSnippets
     {
-        get
-        {
-            return "";
-        }
+        get => "";
         set
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -143,23 +139,23 @@ assert.Equals(json.value, 'Hello TAP');" },
 
 
     public override void Run()
-    {
-        
+    {        
         HttpRequestMessage request = SetupRequest(BaseAddress);
         JavaScriptRunner javaScriptRunner = JavaScriptRunner.Generate(request);
-        HttpResponseMessage response;
 
         if (request.Headers.Contains("Cookie"))
         {
             var handler = new HttpClientHandler() { UseCookies = false };
-            HttpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(BaseAddress) };
+            httpClient = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(BaseAddress) };
         }
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : HttpClient.Timeout);
-        var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
+        cts.CancelAfter(UseTimeout.IsEnabled ? UseTimeout.Value : httpClient.Timeout);
+        using var tokens = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TapThread.Current.AbortToken);
         var watch = Stopwatch.StartNew();
-        response = HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, tokens.Token).GetAwaiter().GetResult();
+        
+        // The response must be either disposed or read to completion, otherwise HttpClient expects the data to be read in the future.
+        using HttpResponseMessage response = httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, tokens.Token).GetAwaiter().GetResult();
         Results.Publish("Request Duration", watch.ElapsedMilliseconds);
         ResponseCode = response.StatusCode.ToString();
 
