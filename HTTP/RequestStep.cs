@@ -24,6 +24,9 @@ public class RequestStep : TestStep
     [Display("Headers", Description: "Attach headers to the request", Group: "Request", Order: 20)]
     public List<Header> Headers { get; set; } = new List<Header>();
 
+    [Display("Validate Request Headers", Description: "Validate the request header before send.", Group: "Request", Order: 21)]
+    public bool ValidateRequestHeaders { get; set; } = true;
+    
     [Display("Allow Unsecure", Description: "Allow unsecure/untrusted connection (not recommended)", Group: "Request", Order: 22)]
     public bool Unsecure { get; set; } = false;
 
@@ -331,7 +334,10 @@ assert.Equals(json.value, 'Hello TAP');" },
         {
             try
             {
-                request.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                if(ValidateRequestHeaders)
+                    request.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                else
+                    request.Headers.TryAddWithoutValidation(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
             }
             catch (InvalidOperationException)
             {
@@ -340,7 +346,10 @@ assert.Equals(json.value, 'Hello TAP');" },
                     string headerKey = TryExpand(header.Key, environmentVariables, globalVariables);
                     if (request.Content.Headers.Contains(headerKey))
                         request.Content.Headers.Remove(headerKey);
-                    request.Content.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                    if(ValidateRequestHeaders)
+                        request.Content.Headers.Add(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
+                    else
+                        request.Content.Headers.TryAddWithoutValidation(TryExpand(header.Key, environmentVariables, globalVariables), TryExpand(header.Value, environmentVariables, globalVariables));
                 }
             }
         }
